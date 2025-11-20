@@ -1,0 +1,119 @@
+{% extends 'app_Subway/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4" style="color: #009246;">
+            <i class="fas fa-user-plus me-2"></i>Agregar Nuevo Empleado
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card card-custom">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" name="nombre" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Puesto</label>
+                            <input type="text" class="form-control" name="puesto" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" name="telefono" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Salario</label>
+                            <input type="number" step="0.01" class="form-control" name="salario" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Fecha de Contratación</label>
+                            <input type="date" class="form-control" name="fecha_contratacion" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Sucursal</label>
+                            <select class="form-select" name="sucursal" required>
+                                <option value="">Seleccionar sucursal</option>
+                                {% for sucursal in sucursales %}
+                                <option value="{{ sucursal.id }}">{{ sucursal.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Campo para foto de perfil -->
+                    <div class="mb-3">
+                        <label class="form-label">Foto de Perfil (Opcional)</label>
+                        <input type="file" class="form-control" name="foto_perfil" accept="image/*">
+                        <div class="form-text">Formatos aceptados: JPG, PNG, GIF. Tamaño máximo: 5MB.</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'ver_empleados' %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-arrow-left me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-subway">
+                            <i class="fas fa-save me-1"></i>Guardar Empleado
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card card-custom">
+            <div class="card-body">
+                <h5 style="color: #CE2B37;">
+                    <i class="fas fa-info-circle me-2"></i>Información
+                </h5>
+                <p class="card-text">
+                    Complete todos los campos para registrar un nuevo empleado en el sistema.
+                </p>
+                <ul>
+                    <li>El nombre debe ser completo</li>
+                    <li>El puesto debe ser específico</li>
+                    <li>El salario debe ser numérico</li>
+                    <li>Seleccione la sucursal correspondiente</li>
+                    <li>La foto de perfil es opcional</li>
+                </ul>
+                
+                <div class="mt-4">
+                    <h6 style="color: #009246;">Puestos comunes en Subway:</h6>
+                    <ul class="small">
+                        <li>Sandwich Artist</li>
+                        <li>Cajero</li>
+                        <li>Gerente de Tienda</li>
+                        <li>Asistente de Gerente</li>
+                        <li>Encargado de Turno</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:focus {
+        border-color: #009246;
+        box-shadow: 0 0 0 0.2rem rgba(0, 146, 70, 0.25);
+    }
+    
+    .form-select:focus {
+        border-color: #009246;
+        box-shadow: 0 0 0 0.2rem rgba(0, 146, 70, 0.25);
+    }
+</style>
+{% endblock %}

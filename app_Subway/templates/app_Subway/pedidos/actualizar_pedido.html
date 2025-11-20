@@ -1,0 +1,88 @@
+{% extends 'app_Subway/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4" style="color: #009246;">
+            <i class="fas fa-edit me-2"></i>Actualizar Pedido #{{ pedido.id_pedido }}
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card card-custom">
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Cliente</label>
+                            <select class="form-select" name="cliente" required>
+                                {% for cliente in clientes %}
+                                <option value="{{ cliente.id }}" {% if cliente.id == pedido.cliente.id %}selected{% endif %}>
+                                    {{ cliente.nombre }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Sucursal</label>
+                            <select class="form-select" name="sucursal" required>
+                                {% for sucursal in sucursales %}
+                                <option value="{{ sucursal.id }}" {% if sucursal.id == pedido.sucursal.id %}selected{% endif %}>
+                                    {{ sucursal.nombre }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Total</label>
+                            <input type="number" class="form-control" name="total" value="{{ pedido.total }}" step="0.01" min="0" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Estado</label>
+                            <select class="form-select" name="estado" required>
+                                <option value="pendiente" {% if pedido.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+                                <option value="preparando" {% if pedido.estado == 'preparando' %}selected{% endif %}>Preparando</option>
+                                <option value="listo" {% if pedido.estado == 'listo' %}selected{% endif %}>Listo</option>
+                                <option value="entregado" {% if pedido.estado == 'entregado' %}selected{% endif %}>Entregado</option>
+                                <option value="cancelado" {% if pedido.estado == 'cancelado' %}selected{% endif %}>Cancelado</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Método de Pago</label>
+                            <select class="form-select" name="metodo_pago" required>
+                                <option value="efectivo" {% if pedido.metodo_pago == 'efectivo' %}selected{% endif %}>Efectivo</option>
+                                <option value="tarjeta" {% if pedido.metodo_pago == 'tarjeta' %}selected{% endif %}>Tarjeta</option>
+                                <option value="transferencia" {% if pedido.metodo_pago == 'transferencia' %}selected{% endif %}>Transferencia</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Notas</label>
+                        <textarea class="form-control" name="notas" rows="3">{{ pedido.notas }}</textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'ver_pedidos' %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-arrow-left me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-subway">
+                            <i class="fas fa-save me-1"></i>Actualizar Pedido
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

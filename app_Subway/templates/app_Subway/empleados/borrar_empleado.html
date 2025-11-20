@@ -1,0 +1,71 @@
+{% extends 'app_Subway/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card card-custom">
+            <div class="card-body text-center">
+                <h3 class="card-title mb-4" style="color: #CE2B37;">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación
+                </h3>
+                
+                <!-- Mostrar foto del empleado si existe -->
+                {% if empleado.foto_perfil %}
+                <div class="text-center mb-3">
+                    <img src="{{ empleado.foto_perfil.url }}" 
+                         alt="Foto de {{ empleado.nombre }}" 
+                         class="img-fluid rounded-circle" 
+                         style="width: 100px; height: 100px; object-fit: cover;">
+                </div>
+                {% else %}
+                <div class="text-center mb-3">
+                    <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center" 
+                         style="width: 100px; height: 100px;">
+                        <i class="fas fa-user fa-2x text-secondary"></i>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="alert alert-warning">
+                    <h5>¿Está seguro que desea eliminar al siguiente empleado?</h5>
+                    <p class="mb-1"><strong>Nombre:</strong> {{ empleado.nombre }}</p>
+                    <p class="mb-1"><strong>Puesto:</strong> {{ empleado.puesto }}</p>
+                    <p class="mb-1"><strong>Sucursal:</strong> {{ empleado.sucursal.nombre }}</p>
+                    <p class="mb-1"><strong>Teléfono:</strong> {{ empleado.telefono }}</p>
+                    <p class="mb-1"><strong>Salario:</strong> ${{ empleado.salario }}</p>
+                </div>
+                
+                <p class="text-danger">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Esta acción no se puede deshacer. Todos los datos del empleado se perderán permanentemente.
+                </p>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="{% url 'ver_empleados' %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-times me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i>Eliminar Empleado
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .alert-warning {
+        border-left: 4px solid #ffc107;
+    }
+    .btn-danger {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        border: none;
+    }
+    .btn-danger:hover {
+        background: linear-gradient(135deg, #c82333, #a71e2a);
+    }
+</style>
+{% endblock %}

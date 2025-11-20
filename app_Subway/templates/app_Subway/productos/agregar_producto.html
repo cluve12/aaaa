@@ -1,0 +1,170 @@
+{% extends 'app_Subway/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4" style="color: #009246;">
+            <i class="fas fa-hamburger me-2"></i>Agregar Nuevo Producto
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card card-custom">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data" id="productoForm">
+                    {% csrf_token %}
+                    
+                    <!-- Imagen del Producto -->
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="form-label">Imagen del Producto</label>
+                            <input type="file" class="form-control" name="imagen" accept="image/*" id="imagenProducto">
+                            <div class="form-text">Formatos aceptados: JPG, PNG, GIF</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre del Producto</label>
+                            <input type="text" class="form-control" name="nombre" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tipo de Producto</label>
+                            <select class="form-select" name="tipo" id="tipoProducto" required>
+                                <option value="">Seleccionar tipo</option>
+                                <option value="sandwich">Sandwich</option>
+                                <option value="ensalada">Ensalada</option>
+                                <option value="bebida">Bebida</option>
+                                <option value="postre">Postre</option>
+                                <option value="combo">Combo</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Precio ($)</label>
+                            <input type="number" class="form-control" name="precio" step="0.01" min="0" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Calorías</label>
+                            <input type="number" class="form-control" name="calorias" min="0" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control" name="descripcion" rows="3" required></textarea>
+                    </div>
+                    
+                    <!-- Proveedor con filtro dinámico -->
+                    <div class="mb-3">
+                        <label class="form-label">Proveedor</label>
+                        <select class="form-select" name="proveedor" id="proveedorSelect" required>
+                            <option value="">Seleccionar proveedor</option>
+                            {% for proveedor in proveedores %}
+                            <option value="{{ proveedor.id_proveedor }}" 
+                                    data-tipo="{{ proveedor.tipo_proveedor }}">
+                                {{ proveedor.nombre }} - {{ proveedor.get_tipo_proveedor_display }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text" id="proveedorInfo">
+                            Selecciona primero el tipo de producto para filtrar proveedores
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" name="disponible" id="disponible" checked>
+                        <label class="form-check-label" for="disponible">Producto disponible</label>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'ver_productos' %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-arrow-left me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-subway">
+                            <i class="fas fa-save me-1"></i>Guardar Producto
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Panel de información -->
+    <div class="col-md-4">
+        <div class="card card-custom">
+            <div class="card-header" style="background: linear-gradient(135deg, #009246, #CE2B37); color: white;">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Tipos de Proveedores
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="small"><strong>Alimentos:</strong> Sandwich, Ensaladas, Postres</p>
+                <p class="small"><strong>Bebidas:</strong> Refrescos, Jugos, Aguas</p>
+                <p class="small"><strong>Materiales:</strong> Empaques, Servilletas</p>
+                <p class="small"><strong>Equipos:</strong> Hornos, Refrigeradores</p>
+                <p class="small"><strong>General:</strong> Varios productos</p>
+                
+                <div class="alert alert-info mt-3">
+                    <small>
+                        <i class="fas fa-lightbulb me-1"></i>
+                        El sistema filtrará automáticamente los proveedores según el tipo de producto seleccionado.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tipoProducto = document.getElementById('tipoProducto');
+    const proveedorSelect = document.getElementById('proveedorSelect');
+    const proveedorInfo = document.getElementById('proveedorInfo');
+    const todasOpciones = Array.from(proveedorSelect.options);
+    
+    // Mapeo de tipos de producto a tipos de proveedor
+    const mapeoTipos = {
+        'sandwich': 'alimentos',
+        'ensalada': 'alimentos', 
+        'postre': 'alimentos',
+        'combo': 'alimentos',
+        'bebida': 'bebidas'
+    };
+    
+    tipoProducto.addEventListener('change', function() {
+        const tipoSeleccionado = this.value;
+        const tipoProveedorRequerido = mapeoTipos[tipoSeleccionado] || 'general';
+        
+        // Limpiar opciones actuales (excepto la primera)
+        proveedorSelect.innerHTML = '<option value="">Seleccionar proveedor</option>';
+        
+        // Filtrar y agregar opciones que coincidan
+        todasOpciones.forEach(option => {
+            if (option.value && option.dataset.tipo === tipoProveedorRequerido) {
+                proveedorSelect.appendChild(option.cloneNode(true));
+            }
+        });
+        
+        // Actualizar información
+        if (tipoSeleccionado) {
+            proveedorInfo.innerHTML = `Mostrando proveedores de <strong>${tipoProveedorRequerido}</strong>`;
+            proveedorInfo.className = 'form-text text-success';
+        } else {
+            proveedorInfo.innerHTML = 'Selecciona primero el tipo de producto para filtrar proveedores';
+            proveedorInfo.className = 'form-text';
+        }
+    });
+});
+</script>
+
+<style>
+.form-select[multiple] {
+    min-height: 120px;
+}
+</style>
+{% endblock %}

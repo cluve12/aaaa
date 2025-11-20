@@ -1,0 +1,90 @@
+{% extends 'app_Subway/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4" style="color: #009246;">
+            <i class="fas fa-truck-loading me-2"></i>Agregar Nuevo Proveedor
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card card-custom">
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre del Proveedor</label>
+                            <input type="text" class="form-control" name="nombre" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" name="telefono" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" name="correo" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">RFC</label>
+                            <input type="text" class="form-control" name="rfc" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Dirección</label>
+                        <textarea class="form-control" name="direccion" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de Proveedor</label>
+                        <select class="form-select" name="tipo_proveedor" required>
+                            <option value="">Seleccionar tipo</option>
+                            <option value="alimentos">Alimentos</option>
+                            <option value="bebidas">Bebidas</option>
+                            <option value="utensilios">Utensilios</option>
+                            <option value="limpieza">Limpieza</option>
+                            <option value="equipo">Equipo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'ver_proveedores' %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-arrow-left me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-subway">
+                            <i class="fas fa-save me-1"></i>Guardar Proveedor
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card card-custom">
+            <div class="card-body">
+                <h5 style="color: #CE2B37;">
+                    <i class="fas fa-info-circle me-2"></i>Información
+                </h5>
+                <p class="card-text">
+                    Complete todos los campos para registrar un nuevo proveedor en el sistema.
+                </p>
+                <ul>
+                    <li>El correo debe ser válido</li>
+                    <li>El RFC debe tener 12 o 13 caracteres</li>
+                    <li>Seleccione el tipo de proveedor adecuado</li>
+                    <li>La dirección debe ser completa</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

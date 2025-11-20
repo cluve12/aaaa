@@ -1,0 +1,146 @@
+{% extends 'app_Subway/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4" style="color: #009246;">
+            <i class="fas fa-edit me-2"></i>Actualizar Cliente: {{ cliente.nombre }}
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card card-custom">
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <!-- Campo para foto de perfil -->
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="form-label">Foto de Perfil</label>
+                            {% if cliente.foto_perfil %}
+                                <div class="mb-2">
+                                    <img src="{{ cliente.foto_perfil.url }}" alt="Foto actual" class="img-thumbnail" style="max-width: 150px; max-height: 150px;">
+                                    <div class="form-text">Foto actual</div>
+                                </div>
+                            {% endif %}
+                            <input type="file" class="form-control" name="foto_perfil" accept="image/*">
+                            <div class="form-text">Dejar vacío para mantener la foto actual</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" name="nombre" value="{{ cliente.nombre }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" name="correo" value="{{ cliente.correo }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" name="telefono" value="{{ cliente.telefono }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Fecha de Registro</label>
+                            <input type="date" class="form-control" name="fecha_registro" value="{{ cliente.fecha_registro|date:'Y-m-d' }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Dirección</label>
+                        <textarea class="form-control" name="direccion" rows="3" required>{{ cliente.direccion }}</textarea>
+                    </div>
+                    
+                    <!-- CORREGIDO: Selección múltiple de sucursales -->
+                    <div class="mb-3">
+                        <label class="form-label">Sucursales Asociadas</label>
+                        <select class="form-select" name="sucursales" multiple size="4">
+                            {% for sucursal in sucursales %}
+                            <option value="{{ sucursal.id }}" 
+                                    {% if sucursal in cliente.sucursales.all %}selected{% endif %}>
+                                {{ sucursal.nombre }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">
+                            Mantén presionado Ctrl (Windows) o Cmd (Mac) para seleccionar múltiples sucursales
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'ver_clientes' %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-arrow-left me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-subway">
+                            <i class="fas fa-save me-1"></i>Actualizar Cliente
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Panel de información del cliente -->
+    <div class="col-md-4">
+        <div class="card card-custom">
+            <div class="card-header" style="background: linear-gradient(135deg, #009246, #CE2B37); color: white;">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Información del Cliente
+                </h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Cliente:</strong> {{ cliente.nombre }}</p>
+                <p><strong>Registrado:</strong> {{ cliente.fecha_registro }}</p>
+                <p><strong>Teléfono:</strong> {{ cliente.telefono }}</p>
+                
+                <hr>
+                
+                <p><strong>Sucursales Actuales:</strong></p>
+                {% if cliente.sucursales.all %}
+                    <ul class="list-unstyled">
+                    {% for sucursal in cliente.sucursales.all %}
+                        <li class="mb-1">
+                            <i class="fas fa-store me-1 text-success"></i> 
+                            <strong>{{ sucursal.nombre }}</strong>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                    <p class="small text-success">
+                        <i class="fas fa-check-circle me-1"></i>
+                        Este cliente está asociado a {{ cliente.sucursales.count }} sucursal(es)
+                    </p>
+                {% else %}
+                    <p class="text-danger small">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        No asociado a ninguna sucursal
+                    </p>
+                {% endif %}
+                
+                <div class="alert alert-info mt-3">
+                    <small>
+                        <i class="fas fa-lightbulb me-1"></i>
+                        <strong>Tip:</strong> Puedes asociar este cliente a múltiples sucursales. 
+                        Esto permitirá que aparezca en los listados de cada sucursal seleccionada.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-select[multiple] {
+    min-height: 120px;
+}
+.list-unstyled li {
+    padding: 2px 0;
+}
+</style>
+{% endblock %}

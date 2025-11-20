@@ -1,0 +1,93 @@
+{% extends 'app_Subway/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 style="color: #009246;">
+                <i class="fas fa-eye me-2"></i>Detalle del Pedido #{{ pedido.id_pedido }}
+            </h2>
+            <a href="{% url 'ver_pedidos' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Volver a Pedidos
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-custom mb-4">
+            <div class="card-body">
+                <h5 class="card-title" style="color: #CE2B37;">Información del Pedido</h5>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>ID Pedido:</strong><br>
+                        <strong>Cliente:</strong><br>
+                        <strong>Sucursal:</strong><br>
+                        <strong>Fecha:</strong><br>
+                        <strong>Estado:</strong><br>
+                        <strong>Método Pago:</strong><br>
+                        <strong>Total:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ pedido.id_pedido }}<br>
+                        {{ pedido.cliente.nombre }}<br>
+                        {{ pedido.sucursal.nombre }}<br>
+                        {{ pedido.fecha|date:"d/m/Y H:i" }}<br>
+                        <span class="badge 
+                            {% if pedido.estado == 'pendiente' %}bg-warning
+                            {% elif pedido.estado == 'preparando' %}bg-info
+                            {% elif pedido.estado == 'listo' %}bg-success
+                            {% elif pedido.estado == 'entregado' %}bg-secondary
+                            {% else %}bg-danger{% endif %}">
+                            {{ pedido.get_estado_display }}
+                        </span><br>
+                        {{ pedido.get_metodo_pago_display }}<br>
+                        <strong style="color: #009246;">${{ pedido.total }}</strong>
+                    </div>
+                </div>
+                {% if pedido.notas %}
+                <div class="mt-3">
+                    <strong>Notas:</strong><br>
+                    <p class="mb-0">{{ pedido.notas }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card card-custom">
+            <div class="card-body">
+                <h5 class="card-title" style="color: #CE2B37;">Detalles del Pedido</h5>
+                {% if detalles %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unit.</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detalle in detalles %}
+                            <tr>
+                                <td>{{ detalle.producto.nombre }}</td>
+                                <td>{{ detalle.cantidad }}</td>
+                                <td>${{ detalle.precio_unitario }}</td>
+                                <td>${{ detalle.subtotal }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No hay detalles registrados para este pedido.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

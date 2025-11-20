@@ -1,0 +1,73 @@
+{% extends 'app_Subway/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="display-4 text-center mb-4" style="color: #009246;">
+            <i class="fas fa-subway me-3"></i>Bienvenido al Sistema Subway
+        </h1>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-6">
+        <div class="card card-custom h-100">
+            <div class="card-body">
+                <h3 class="card-title" style="color: #CE2B37;">
+                    <i class="fas fa-info-circle me-2"></i>Información del Sistema
+                </h3>
+                <p class="card-text">
+                    Este sistema permite la gestión completa de las operaciones de Subway, incluyendo:
+                </p>
+                <ul>
+                    <li>Gestión de Sucursales</li>
+                    <li>Administración de Clientes</li>
+                    <li>Control de Empleados</li>
+                    <li>Reportes y Estadísticas</li>
+                </ul>
+                <p class="card-text">
+                    Utiliza el menú lateral para navegar entre las diferentes secciones del sistema.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card card-custom h-100">
+            <div class="card-body text-center">
+                <img src="imagenes/a" 
+                     alt="Subway Logo" class="img-fluid mb-3" style="max-height: 150px;">
+                <h4 style="color: #009246;">¡Eat Fresh!</h4>
+                <p class="card-text">
+                    Sistema desarrollado para optimizar la administración de restaurantes Subway.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card card-custom">
+            <div class="card-body">
+                <h5 class="card-title" style="color: #CE2B37;">
+                    <i class="fas fa-chart-line me-2"></i>Estadísticas Rápidas
+                </h5>
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <h3 style="color: #009246;">{{ sucursales_count }}</h3>
+                        <p>Sucursales Registradas</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h3 style="color: #009246;">0</h3>
+                        <p>Clientes Activos</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h3 style="color: #009246;">0</h3>
+                        <p>Empleados</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'app_Subway/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4" style="color: #009246;">
+            <i class="fas fa-edit me-2"></i>Actualizar Sucursal
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card card-custom">
+            <div class="card-body">
+                <form method="POST" action="{% url 'realizar_actualizacion_sucursal' sucursal.id %}">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre de la Sucursal</label>
+                            <input type="text" class="form-control" name="nombre" value="{{ sucursal.nombre }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" class="form-control" name="telefono" value="{{ sucursal.telefono }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Horario de Apertura</label>
+                            <input type="time" class="form-control" name="horario_apertura" value="{{ sucursal.horario_apertura|time:'H:i' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Horario de Cierre</label>
+                            <input type="time" class="form-control" name="horario_cierre" value="{{ sucursal.horario_cierre|time:'H:i' }}" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Dirección</label>
+                        <textarea class="form-control" name="direccion" rows="3" required>{{ sucursal.direccion }}</textarea>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'ver_sucursales' %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-arrow-left me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-subway">
+                            <i class="fas fa-save me-1"></i>Actualizar Sucursal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

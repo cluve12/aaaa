@@ -1,0 +1,44 @@
+{% extends 'app_Subway/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4" style="color: #CE2B37;">
+            <i class="fas fa-exclamation-triangle me-2"></i>Eliminar Proveedor
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-custom">
+            <div class="card-body">
+                <div class="alert alert-danger">
+                    <h5><i class="fas fa-exclamation-circle me-2"></i>¿Estás seguro de eliminar este proveedor?</h5>
+                    <p class="mb-0">Esta acción no se puede deshacer.</p>
+                </div>
+                
+                <div class="mb-3">
+                    <strong>Nombre:</strong> {{ proveedor.nombre }}<br>
+                    <strong>Teléfono:</strong> {{ proveedor.telefono }}<br>
+                    <strong>Correo:</strong> {{ proveedor.correo }}<br>
+                    <strong>RFC:</strong> {{ proveedor.rfc }}<br>
+                    <strong>Tipo:</strong> {{ proveedor.tipo_proveedor }}
+                </div>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'ver_proveedores' %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-times me-1"></i>Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i>Eliminar Proveedor
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
